@@ -7,7 +7,8 @@ from pathlib import Path
 
 import yaml
 
-DEFAULT_CONFIG = Path(__file__).resolve().parents[2] / "config" / "series.yaml"
+# Relative to the working directory: the CLI is run from the project root.
+DEFAULT_CONFIG = Path("config/series.yaml")
 
 ALL_INDUSTRIES = "Total, all industries"
 RATE_INDICATORS = {"Unemployment rate", "Participation rate", "Employment rate"}
