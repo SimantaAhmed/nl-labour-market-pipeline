@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.pyc
+*.egg-info/
+.venv/
+.pytest_cache/
+.ruff_cache/
+
+# Pipeline outputs (the warehouse lives on the `data` branch in CI)
+warehouse/
+site/
+summary.json
+
+# OS
+.DS_Store
+Thumbs.db

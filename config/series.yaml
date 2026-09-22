@@ -1,0 +1,53 @@
+# StatCan series loaded by the pipeline.
+#
+# Every entry is pinned by vector ID. `nl-labour verify-series` rebuilds the
+# title StatCan should return for each ID from these fields and checks it
+# against the live API, so an ID that has moved or been retired cannot load
+# silently.
+#
+# Sources:
+#   14-10-0287-01  Labour force characteristics, monthly, seasonally adjusted
+#   14-10-0355-01  Employment by industry, monthly, seasonally adjusted
+#
+# All series: both genders, 15 years and over, estimate, seasonally adjusted.
+# Counts are in thousands of persons; rates are percentages.
+
+labour_force:
+  table: "14-10-0287-01"
+  series:
+    - {vector_id: 2062999, geography: Newfoundland and Labrador, indicator: Labour force}
+    - {vector_id: 2063000, geography: Newfoundland and Labrador, indicator: Employment}
+    - {vector_id: 2063003, geography: Newfoundland and Labrador, indicator: Unemployment}
+    - {vector_id: 2063004, geography: Newfoundland and Labrador, indicator: Unemployment rate}
+    - {vector_id: 2063005, geography: Newfoundland and Labrador, indicator: Participation rate}
+    - {vector_id: 2063006, geography: Newfoundland and Labrador, indicator: Employment rate}
+    - {vector_id: 2062810, geography: Canada, indicator: Labour force}
+    - {vector_id: 2062811, geography: Canada, indicator: Employment}
+    - {vector_id: 2062814, geography: Canada, indicator: Unemployment}
+    - {vector_id: 2062815, geography: Canada, indicator: Unemployment rate}
+    - {vector_id: 2062816, geography: Canada, indicator: Participation rate}
+    - {vector_id: 2062817, geography: Canada, indicator: Employment rate}
+
+# Wholesale and retail trade is loaded as one series: the separate wholesale
+# and retail vectors have 132 missing months in their early history.
+employment_by_industry:
+  table: "14-10-0355-01"
+  geography: Newfoundland and Labrador
+  indicator: Employment
+  series:
+    - {vector_id: 2057624, industry: Agriculture,                                          naics: "111-112, 1100, 1151-1152", sector: Goods}
+    - {vector_id: 2057625, industry: "Forestry, fishing, mining, quarrying, oil and gas",   naics: "21, 113-114, 1153, 2100",  sector: Goods}
+    - {vector_id: 2057626, industry: Utilities,                                            naics: "22",       sector: Goods}
+    - {vector_id: 2057627, industry: Construction,                                         naics: "23",       sector: Goods}
+    - {vector_id: 2057628, industry: Manufacturing,                                        naics: "31-33",    sector: Goods}
+    - {vector_id: 2057630, industry: Wholesale and retail trade,                           naics: "41, 44-45", sector: Services}
+    - {vector_id: 2057631, industry: Transportation and warehousing,                       naics: "48-49",    sector: Services}
+    - {vector_id: 2057632, industry: "Finance, insurance, real estate, rental and leasing", naics: "52-53",   sector: Services}
+    - {vector_id: 2057633, industry: "Professional, scientific and technical services",    naics: "54",       sector: Services}
+    - {vector_id: 2057634, industry: "Business, building and other support services",      naics: "55-56",    sector: Services}
+    - {vector_id: 2057635, industry: Educational services,                                 naics: "61",       sector: Services}
+    - {vector_id: 2057636, industry: Health care and social assistance,                    naics: "62",       sector: Services}
+    - {vector_id: 2057637, industry: "Information, culture and recreation",                naics: "51, 71",   sector: Services}
+    - {vector_id: 2057638, industry: Accommodation and food services,                      naics: "72",       sector: Services}
+    - {vector_id: 2057639, industry: Other services (except public administration),        naics: "81",       sector: Services}
+    - {vector_id: 2057640, industry: Public administration,                                naics: "91",       sector: Services}

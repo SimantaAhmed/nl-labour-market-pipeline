@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nl-labour"
+version = "0.1.0"
+description = "Newfoundland and Labrador labour market data pipeline (StatCan WDS to DuckDB)"
+readme = "README.md"
+license = "MIT"
+authors = [{ name = "Simanta Ahmed" }]
+requires-python = ">=3.10"
+dependencies = [
+    "duckdb>=1.4",       # MERGE INTO arrived in 1.4
+    "requests>=2.31",
+    "PyYAML>=6.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "ruff>=0.6"]
+
+[project.scripts]
+nl-labour = "nl_labour.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+nl_labour = ["sql/*.sql", "sql/checks/*.sql", "templates/*.html"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

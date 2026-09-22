@@ -1,0 +1,90 @@
+name: Pipeline
+
+# Loads the latest StatCan data, runs the data-quality checks, and publishes
+# the dashboard to GitHub Pages.
+#
+# The warehouse is a single DuckDB file. It is kept between runs on the `data`
+# branch, which holds one commit that is replaced whenever the data changes, so
+# the repository does not grow with every load.
+
+on:
+  schedule:
+    # Saturdays 14:00 UTC. The Labour Force Survey is released on a Friday
+    # morning, usually the first Friday of the month.
+    - cron: "0 14 * * 6"
+  workflow_dispatch:
+    inputs:
+      full_refresh:
+        description: "Re-read full history instead of the last 36 months"
+        type: boolean
+        default: false
+
+concurrency:
+  group: pipeline
+  cancel-in-progress: false
+
+jobs:
+  load:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install .
+
+      - name: Restore warehouse from the data branch
+        run: |
+          mkdir -p warehouse
+          if git fetch --depth 1 origin data; then
+            git show origin/data:nl_labour.duckdb > warehouse/nl_labour.duckdb
+            echo "Restored warehouse from data branch"
+          else
+            echo "No data branch yet: this run does a full load"
+          fi
+
+      - name: Load and check
+        run: nl-labour run --summary summary.json ${{ inputs.full_refresh && '--full-refresh' || '' }}
+
+      - name: Build dashboard
+        run: nl-labour dashboard --out site
+
+      - name: Save warehouse if the data changed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          changed=$(python -c "import json; print(json.load(open('summary.json'))['changed'])")
+          if [ "$changed" != "True" ]; then
+            echo "No new or revised values; data branch left as is"
+            exit 0
+          fi
+          mkdir /tmp/data && cp warehouse/nl_labour.duckdb /tmp/data/
+          cd /tmp/data
+          git init -q -b data
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add nl_labour.duckdb
+          git commit -qm "Warehouse after run ${{ github.run_id }}"
+          git push -q --force "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git" data
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: site
+
+  deploy:
+    needs: load
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5
