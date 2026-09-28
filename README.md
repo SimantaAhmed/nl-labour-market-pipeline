@@ -10,6 +10,9 @@ revises, runs data-quality checks, and publishes a dashboard.
 
 **Dashboard:** https://simantaahmed.github.io/nl-labour-market-pipeline/
 
+**Data downloads (CSV):** published with the dashboard and regenerated on every run.
+See the "Download the data" section of the dashboard for the files and columns.
+
 ## What the data shows
 
 Figures are from the August 2026 release (data through August 2026). Rates are

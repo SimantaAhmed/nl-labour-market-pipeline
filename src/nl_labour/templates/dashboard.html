@@ -5,6 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>NL Labour Market</title>
 <meta name="description" content="Newfoundland and Labrador labour market indicators from the Statistics Canada Labour Force Survey, rebuilt automatically after each monthly release.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://simantaahmed.github.io/nl-labour-market-pipeline/">
+<meta property="og:title" content="Newfoundland and Labrador labour market">
+<meta property="og:description" content="Open data on NL jobs, unemployment and participation since 1976, compared with Canada. Updated after every Statistics Canada release. Free to download.">
+<meta property="og:image" content="https://simantaahmed.github.io/nl-labour-market-pipeline/preview.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+<meta property="og:image:alt" content="Newfoundland and Labrador labour market: open data, updated monthly">
+<meta name="twitter:card" content="summary_large_image">
 <style>
 :root {
   color-scheme: light;
@@ -155,6 +164,12 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
 .meta div { font-size: 13px; color: var(--ink-2); }
 .meta b { display: block; font-size: 16px; color: var(--ink); font-weight: 600; }
 .note { font-size: 13px; color: var(--muted); margin-top: 10px; }
+.lede a { white-space: nowrap; }
+.downloads { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+.downloads li { display: grid; grid-template-columns: 220px 1fr; gap: 12px; font-size: 13px; }
+.downloads a { font-weight: 600; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.downloads span { color: var(--ink-2); }
+@media (max-width: 560px) { .downloads li { grid-template-columns: 1fr; gap: 2px; } }
 footer { margin-top: 48px; font-size: 13px; color: var(--muted); border-top: 1px solid var(--grid); padding-top: 16px; }
 footer p + p { margin-top: 6px; }
 a { color: var(--nl); }
@@ -216,6 +231,33 @@ a { color: var(--nl); }
     </div>
   </section>
 
+  <section class="section" id="downloads" aria-labelledby="data-h">
+    <h2 id="data-h">Download the data</h2>
+    <p class="sub">Free to use for coursework, research and reporting. Files are regenerated with every Statistics Canada release. Blank values are months Statistics Canada suppressed.</p>
+    <div class="card">
+      <ul class="downloads">
+        <li>
+          <a href="data/nl_labour_monthly.csv" download>nl_labour_monthly.csv</a>
+          <span>Every monthly value since 1976 in long format: NL and Canada headline series plus NL employment by industry. Columns: month, geography, indicator, industry, sector, unit, value.</span>
+        </li>
+        <li>
+          <a href="data/nl_vs_canada_rates.csv" download>nl_vs_canada_rates.csv</a>
+          <span>One row per month with NL and Canada unemployment, participation and employment rates side by side. Easiest file to open in Excel.</span>
+        </li>
+        <li>
+          <a href="data/nl_industry_employment.csv" download>nl_industry_employment.csv</a>
+          <span>NL employment by industry as 12-month averages, with 1-year and 10-year change. The figures behind the chart above.</span>
+        </li>
+        <li>
+          <a href="data/revisions.csv" download>revisions.csv</a>
+          <span>Every value Statistics Canada changed after this pipeline first loaded it, with the old and new value.</span>
+        </li>
+      </ul>
+      <p class="note">Rates are percentages. Counts are thousands of people. All series are seasonally adjusted, population aged 15 and over.</p>
+      <p class="note" id="cite"></p>
+    </div>
+  </section>
+
   <section class="section" aria-labelledby="rev-h">
     <h2 id="rev-h">Revisions detected</h2>
     <p class="sub" id="rev-sub"></p>
@@ -274,9 +316,16 @@ a { color: var(--nl); }
   const latestMonth = last(ur).month;
 
   // ---- header + tiles ----------------------------------------------------
-  document.getElementById("lede").textContent =
+  const lede = document.getElementById("lede");
+  lede.textContent =
     `Labour Force Survey estimates from Statistics Canada, seasonally adjusted. ` +
-    `Data through ${monthLabel(latestMonth)}, released ${D.pipeline.last_release}.`;
+    `Data through ${monthLabel(latestMonth)}, released ${D.pipeline.last_release}. `;
+  lede.append(el("a", { href: "#downloads" }, "Download the data"));
+
+  document.getElementById("cite").textContent =
+    `Suggested citation: Statistics Canada, Tables 14-10-0287-01 and 14-10-0355-01, ` +
+    `compiled by Simanta Ahmed, NL Labour Market Pipeline, ` +
+    `https://simantaahmed.github.io/nl-labour-market-pipeline/ (data through ${monthLabel(latestMonth)}).`;
 
   const emp = D.employment;
   const tiles = [

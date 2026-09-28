@@ -26,7 +26,7 @@ nl-labour = "nl_labour.cli:main"
 where = ["src"]
 
 [tool.setuptools.package-data]
-nl_labour = ["sql/*.sql", "sql/checks/*.sql", "templates/*.html"]
+nl_labour = ["sql/*.sql", "sql/checks/*.sql", "templates/*.html", "templates/*.png"]
 
 [tool.ruff]
 line-length = 100

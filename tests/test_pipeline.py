@@ -166,3 +166,15 @@ def test_checks_catch_missing_month(con, client):
     del client.points(UNEMPLOYMENT_RATE)[1]
     warehouse.run_batch(con, client, SERIES)
     assert check(con, "monthly_gaps").violations == 1
+
+
+def test_dashboard_publishes_csv_downloads(con, client, tmp_path):
+    from nl_labour.dashboard import DOWNLOADS, build
+    warehouse.run_batch(con, client, SERIES)
+    build(con, tmp_path)
+    assert (tmp_path / "preview.png").exists()
+    for name in DOWNLOADS:
+        assert (tmp_path / "data" / name).exists()
+    monthly = (tmp_path / "data" / "nl_labour_monthly.csv").read_text().splitlines()
+    assert monthly[0] == "month,geography,indicator,industry,sector,unit,value"
+    assert len(monthly) == 1 + 9
