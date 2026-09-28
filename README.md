@@ -10,8 +10,17 @@ revises, runs data-quality checks, and publishes a dashboard.
 
 **Dashboard:** https://simantaahmed.github.io/nl-labour-market-pipeline/
 
-**Data downloads (CSV):** published with the dashboard and regenerated on every run.
-See the "Download the data" section of the dashboard for the files and columns.
+**Data downloads (CSV):** regenerated on every run, free to use.
+
+| File | Contents |
+|---|---|
+| [nl_labour_monthly.csv](https://simantaahmed.github.io/nl-labour-market-pipeline/data/nl_labour_monthly.csv) | Every monthly value since 1976, long format (month, geography, indicator, industry, sector, unit, value) |
+| [nl_vs_canada_rates.csv](https://simantaahmed.github.io/nl-labour-market-pipeline/data/nl_vs_canada_rates.csv) | NL and Canada unemployment, participation and employment rates, one row per month |
+| [nl_industry_employment.csv](https://simantaahmed.github.io/nl-labour-market-pipeline/data/nl_industry_employment.csv) | NL employment by industry, 12-month averages with 1-year and 10-year change |
+| [revisions.csv](https://simantaahmed.github.io/nl-labour-market-pipeline/data/revisions.csv) | Values Statistics Canada changed after they were first loaded |
+
+Rates are percentages, counts are thousands of people, and blank values are
+months Statistics Canada suppressed.
 
 ## What the data shows
 
